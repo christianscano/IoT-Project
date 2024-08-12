@@ -1,0 +1,219 @@
+from app.db import sqlite_db as db
+from app.utils import user_role_to_code
+from argon2 import PasswordHasher
+from datetime import datetime
+
+
+class InvalidRoleException(Exception):
+    def __init__(self):
+        self.message = 'Invalid role'
+        super().__init__(self.message)
+
+class UserNotExistException(Exception):
+    def __init__(self):
+        self.message = 'User does not exist'
+        super().__init__(self.message)
+
+class UserExistException(Exception):
+    def __init__(self):
+        self.message = 'User already exists'
+        super().__init__(self.message)
+
+class TagExistException(Exception):
+    def __init__(self):
+        self.message = 'Tag already assigned'
+        super().__init__(self.message)
+
+
+class User(db.Model):
+    """
+    A class to represent a User in the database. The kind attribute can assume 
+    the following values:
+        0 - System Manager
+        1 - Security Staff
+        2 - System Administrator
+    """
+    __tablename__ = 'Users'
+    id       = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(30), unique=True, nullable=False)
+    name     = db.Column(db.String(30), nullable=False)
+    surname  = db.Column(db.String(30), nullable=False)
+    role     = db.Column(db.Integer, nullable=False)
+    password = db.Column(db.String(30), nullable=False)
+    tag_id   = db.Column(db.String(10), unique=True)
+    # One-to-many relationship with Logs
+    logs     = db.relationship('AccessLog', backref='user', lazy=True, cascade='all')
+
+    def __init__(self, username, name, surname, role, password):
+        self.username = username
+        self.name     = name
+        self.surname  = surname
+        self.role     = role
+        self.password = password
+        self.tag_id   = None
+
+    @classmethod
+    def create_user(cls, username, name, surname, role, password):
+        role = user_role_to_code(role)
+        if role == -1:
+            raise InvalidRoleException()
+        
+        if cls.query.filter_by(username=username).first():
+            return UserExistException()
+        
+        ph = PasswordHasher()
+
+        user = cls(username, name, surname, role, ph.hash(password))
+        db.session.add(user)
+        db.session.commit()
+        return user
+    
+    @classmethod
+    def find_user(cls, username):
+        return cls.query.filter_by(username=username).first()
+    
+    @classmethod
+    def get_all_users(cls):
+        return cls.query.all()
+    
+    @classmethod
+    def reset_password(cls, username, new_password):
+        user = cls.query.filter_by(username=username).first()
+        user.password = new_password
+        db.session.commit()
+    
+    def delete_user(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    @classmethod
+    def find_by_tagid(cls, uid):
+        return cls.query.filter_by(tag_id=uid).first()
+    
+    @classmethod
+    def assign_tag(cls, username, tag_id):
+        user = cls.query.filter_by(username=username).first()
+        if user is None:    
+            raise UserNotExistException()
+
+        if cls.query.filter_by(tag_id=tag_id).first() is not None:
+            raise TagExistException()
+        
+        user.tag_id = tag_id
+        db.session.commit()
+
+    def to_dict(self):
+        return {
+            'username': self.username,
+            'name'    : self.name,
+            'surname' : self.surname,
+            'role'    : self.role,
+            'tag_id'  : self.tag_id
+        }
+    
+    def __repr__(self):
+        return f'<User {self.id}>'
+
+class AccessLog(db.Model):
+    """
+    A class to represent a Log in the database.
+    """
+    __tablename__ = 'AccessLogs'
+    id        = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+    tag_id    = db.Column(db.String(10), nullable=False)
+    # Foreign key to Users
+    user_id   = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+
+    def __init__(self, user_id, tag_id):
+        self.user_id = user_id
+        self.tag_id  = tag_id
+
+    @classmethod    
+    def add_log(cls, user_id, tag_id):
+        log = cls(user_id, tag_id)
+        db.session.add(log)
+        db.session.commit()
+
+    @classmethod
+    def retrieve_all(cls):
+        logs = cls.query.with_entities(
+            cls.timestamp, 
+            User.username, 
+            User.name, 
+            User.surname, 
+            cls.tag_id
+        ).join(User)\
+        .order_by(cls.timestamp.desc())\
+        .all()
+
+        return [cls._to_dict(log) for log in logs]
+    
+    @classmethod
+    def retrieve_by_user(cls, username):
+        user = User.find_user(username)
+        if user is None:
+            raise UserNotExistException()
+        
+        logs = cls.query.with_entities(
+            cls.timestamp, 
+            User.username, 
+            User.name, 
+            User.surname, 
+            cls.tag_id
+        ).join(User)\
+        .filter_by(id=user.id)\
+        .order_by(cls.timestamp.desc())\
+        .all()
+
+        return [cls._to_dict(log) for log in logs]
+    
+    @classmethod
+    def retrieve_by_date(cls, begin, end, username=None):
+        begin = datetime.strptime(begin, '%Y-%m-%d')
+        end   = datetime.strptime(end, '%Y-%m-%d')
+
+        if username:
+            user = User.find_user(username)
+            if user is None:
+                raise UserNotExistException()
+            
+            logs = cls.query.with_entities(
+                cls.timestamp, 
+                User.username, 
+                User.name, 
+                User.surname, 
+                cls.tag_id
+            ).join(User)\
+            .filter(cls.timestamp.between(begin, end))\
+            .filter_by(id=user.id)\
+            .order_by(cls.timestamp.desc())\
+            .all()
+        
+        else:
+            logs = cls.query.with_entities(
+                cls.timestamp, 
+                User.username, 
+                User.name, 
+                User.surname, 
+                cls.tag_id
+            ).join(User)\
+            .filter(cls.timestamp.between(begin, end))\
+            .order_by(cls.timestamp.desc())\
+            .all()
+
+        return [cls._to_dict(log) for log in logs]
+    
+    @staticmethod
+    def _to_dict(entry):
+        return {
+            'timestamp': entry[0].strftime('%Y-%m-%d %H:%M:%S') \
+                if isinstance(entry[0], datetime) else str(entry[0]),
+            'username' : entry[1],
+            'name'     : entry[2],
+            'surname'  : entry[3],
+            'tag_id'   : str(entry[4])
+        }
+        
+    def __repr__(self):
+        return f'<Log {self.id}>'
