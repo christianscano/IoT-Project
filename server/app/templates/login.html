@@ -1,34 +1,36 @@
-{% extends 'base.html' %}
-{% block title %}Sign in{% endblock %}
-
-{% block content %}
-<h1>Login</h1>
-<form method="POST" action="{{ url_for('login') }}">
-    {{ form.hidden_tag() }}
-    <div>
-        {{ form.username.label }}<br>
-        {{ form.username(size=32) }}<br>
-        {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Server Room Control Interface</title>
+    <link rel="stylesheet" href="/static/style/styles.css">
+</head>
+<body>
+    <!-- Top Bar with Logo -->
+    <div class="top-bar">
+        <img src="logo.png" alt="Logo" class="logo">
     </div>
-    <p>
-        {{ form.password.label }}<br>
-        {{ form.password(size=32) }}<br>
-        {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    
-    {{ form.submit() }}
-</form>
 
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <div class="notification is-danger">
-            {{ messages[0] }}
+    <div class="container">
+        <div class="title">
+            <h1>Server Room Control Interface</h1>
         </div>
-    {% endif %}
-{% endwith %}
-
-{% endblock %}
+        <div class="login-form">
+            <form id="loginForm" action="/login" method="POST">
+                <div id="error-message" class="error-message"></div> <!-- Error message container -->
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

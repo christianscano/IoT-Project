@@ -1,9 +1,11 @@
 from app.db import sqlite_db as db
-from app.utils import user_role_to_code
+from app.utils import user_role_to_code, code_to_user_role
 from argon2 import PasswordHasher
 from datetime import datetime
 
-
+# ------------------
+# Custom exceptions
+# ------------------
 class InvalidRoleException(Exception):
     def __init__(self):
         self.message = 'Invalid role'
@@ -24,10 +26,17 @@ class TagExistException(Exception):
         self.message = 'Tag already assigned'
         super().__init__(self.message)
 
+class UserNotAllowedException(Exception):
+    def __init__(self):
+        self.message = 'Operation not allowed for this user'
+        super().__init__(self.message)
 
+# ----------------
+# Database models
+# ----------------
 class User(db.Model):
     """
-    A class to represent a User in the database. The kind attribute can assume 
+    A class to represent a User in the SQLite database. The kind attribute can assume 
     the following values:
         0 - System Manager
         1 - Security Staff
@@ -95,6 +104,9 @@ class User(db.Model):
         user = cls.query.filter_by(username=username).first()
         if user is None:    
             raise UserNotExistException()
+        
+        if code_to_user_role(user.role) == 'admin':
+            raise UserNotAllowedException()
 
         if cls.query.filter_by(tag_id=tag_id).first() is not None:
             raise TagExistException()
@@ -114,9 +126,10 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.id}>'
 
+
 class AccessLog(db.Model):
     """
-    A class to represent a Log in the database.
+    A class to represent a Log in the SQLite database.
     """
     __tablename__ = 'AccessLogs'
     id        = db.Column(db.Integer, primary_key=True)

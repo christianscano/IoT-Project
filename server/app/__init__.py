@@ -1,7 +1,10 @@
 from flask import Flask
 from .models.sqlite import User
 from .db import sqlite_db, mongo_db
-from .apis import api, api_user
+from .mqtt import mqtt_handler
+from .models.mongo import IntrusionSystem
+from .apis import api
+from .frontend.pages import front
 
 app = Flask(__name__)
 
@@ -18,6 +21,13 @@ with app.app_context():
 # Initialize MongoDB
 mongo_db.init_app(app)
 
+if IntrusionSystem.get_intrusion_system() is None:
+    IntrusionSystem.create_intrusion_system()
+
+# Inizialize MQTT
+mqtt_handler.init_mqtt(app)
+
 app.register_blueprint(api, url_prefix='/api/v1')
+app.register_blueprint(front)
 
 app.run(host='0.0.0.0', port=5000)

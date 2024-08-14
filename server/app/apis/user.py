@@ -2,7 +2,7 @@ from flask import Blueprint, request, session, jsonify
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from app.models.sqlite import *
-from .utils import auth, admin_only
+from .utils import auth, admin_only, validate_input
 
 api_user = Blueprint('user', __name__)
 
@@ -10,14 +10,12 @@ api_user = Blueprint('user', __name__)
 @api_user.route('/access_rfid')
 def rfid_auth():
     try:
-        uid = request.args.get('uid')
-
-        user = User.find_by_tagid(uid)
+        user = User.find_by_tagid(request.args.get('uid'))
         if not user:
             return '', 403
-
+        
         AccessLog.add_log(user.id, user.tag_id)
-
+        
         return '', 200
     except:
         return '', 500
@@ -66,6 +64,12 @@ def add_new_user():
         password = request.json['password'].strip()
         role     = request.json['role'].strip()
 
+        if not validate_input(username) or \
+            not validate_input(name) or \
+            not validate_input(surname) or \
+            not validate_input(password):
+            return jsonify({"status": "Invalid characters"}), 401
+
         User.create_user(username, name, surname, role, password)
                 
         return '', 201
@@ -98,7 +102,7 @@ def delete_user():
 @admin_only
 def add_new_tag():
     try:
-        tag_id   = request.json['tag_id'].strip()
+        tag_id   = request.json['tag_id'].strip().upper()
         username = request.json['username'].strip()
 
         User.assign_tag(username, tag_id)
@@ -106,16 +110,17 @@ def add_new_tag():
         return '', 201
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
-    except UserNotExistException as e:
+    except Exception as e:
         return jsonify({"status": e.message}), 401
-    except TagExistException as e:
-        return jsonify({"status": e.message}), 401 
-     
+
 @api_user.route('/reset_password', methods=['POST'])
 @auth
 def reset_password():
     try:
         new_password = request.json['new_password'].strip()
+
+        if not validate_input(new_password):
+            return jsonify({"status": "Invalid characters"}), 401
  
         User.reset_password(session['username'], new_password)
 
@@ -126,6 +131,6 @@ def reset_password():
 @api_user.route('/all')
 @auth
 @admin_only
-def list_users():
+def retrive_list_users():
     users = User.get_all_users()
     return jsonify([user.to_dict() for user in users]), 200

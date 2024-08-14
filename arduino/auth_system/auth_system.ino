@@ -6,12 +6,14 @@
 #include <ESP8266HTTPClient.h>
 #include <Servo.h>
 
+// Connections
 #define SV_PIN  D4
 #define SS_PIN  D3 
 #define RST_PIN D0
 #define SDA_PIN D2
 #define SCL_PIN D1 
 
+// Objects
 Servo servo;
 MFRC522 rfid(SS_PIN, RST_PIN);
 LiquidCrystal_PCF8574 lcd(0x27);
@@ -20,6 +22,7 @@ WiFiClient client;
 HTTPClient http;
 String card_id;
 
+// Constants
 const char* SSID         = "iliadbox-615C99";
 const char* PASSWORD     = "%4zvHyNY2H4E";
 const String SERVER_ADDR = "192.168.1.31:5000";
@@ -56,7 +59,7 @@ bool send_auth_request(String card_id)
 {
   bool is_auth = false;
 
-  String url = "http://" + SERVER_ADDR + "/rfid_auth?uid=" + card_id;
+  String url = "http://" + SERVER_ADDR + "/api/v1/user/access_rfid?uid=" + card_id;
 
   http.begin(client, url);
 
@@ -103,9 +106,9 @@ void loop()
         print_on_lcd("Access denied");
         return;
       }
-  
-      card_id = "";
 
+      // Read tag uid
+      card_id = "";
       for (byte i = 0; i < rfid.uid.size; i++) {;
         card_id += String(rfid.uid.uidByte[i], HEX);
       }

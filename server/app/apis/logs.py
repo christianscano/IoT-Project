@@ -12,7 +12,7 @@ api_logs = Blueprint('logs', __name__)
 def get_all_logs():
     return jsonify(AccessLog.retrieve_all()), 200
 
-@api_logs.route('/filter', methods=['GET'])
+@api_logs.route('/filters', methods=['GET'])
 @auth
 def filter_logs():
     date_begin = request.args.get('date_begin')
