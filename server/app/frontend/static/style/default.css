@@ -1,0 +1,45 @@
+/* base.css */
+
+/* Body Styling */
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar Styling */
+.navbar {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Card Styling */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+}
+
+.sidebar .nav-link {
+    font-weight: normal;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.sidebar .nav-link.active {
+    background-color: #e9ecef;
+    color: #000;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+/* Utility Classes */
+.text-bold {
+    font-weight: bold;
+}

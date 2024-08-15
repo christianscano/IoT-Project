@@ -4,7 +4,7 @@ from datetime import datetime
 from bson import json_util
 import json
 
-TEMPERATURES_RETENTION = 500
+TEMPERATURES_RETENTION = 4000
 ALARM_RETENTION        = 500
 
 class Temperatures(DynamicDocument):
@@ -12,8 +12,8 @@ class Temperatures(DynamicDocument):
     A class to record temperature measurements of the server room
     in the MongoDB database.
     """
-    timestamp = DateTimeField(required=True, default=datetime.now),
-    value     = FloatField(required=True)
+    timestamp = DateTimeField(required = True, default = datetime.now)
+    value     = FloatField(required = True)
     
     meta = {
         'collection': 'temperatures', 
@@ -23,7 +23,9 @@ class Temperatures(DynamicDocument):
 
     def to_dict(self):
         data = self.to_mongo().to_dict()
-        return json.loads(json_util.dumps(data))
+        data = json.loads(json_util.dumps(data))
+        data = {'value': data['value'], 'timestamp': data['timestamp']['$date']}
+        return data
 
     @classmethod
     def add_measure(cls, value):
@@ -49,8 +51,8 @@ class Temperatures(DynamicDocument):
 
 
 class AlarmStatus(EmbeddedDocument):
-    timestamp = DateTimeField(required=True, default=datetime.now)
-    enabled    = BooleanField(required=True)
+    timestamp  = DateTimeField(required = True, default = datetime.now)
+    enabled    = BooleanField(required = True)
 
     meta = {
         'ordering': ['-timestamp'],

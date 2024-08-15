@@ -1,0 +1,34 @@
+/* dashboard.css */
+
+/* Main Content Styling */
+.main-content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.main-content .h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px; /* Use space instead of a line between the title and card */
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 15px; /* Add space before the line inside the card */
+}
+
+.card p {
+    margin-bottom: 0.5rem;
+}
+
+.card p strong {
+    display: inline-block;
+    width: 80px;
+}
+
+/* Retain line inside the card */
+.card hr {
+    margin-top: 0;
+    margin-bottom: 20px;
+}

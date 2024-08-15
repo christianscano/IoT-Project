@@ -8,17 +8,16 @@
 #include <CertStoreBearSSL.h>
 
 // Connections
-#define DHT_PIN D7
+#define DHT_PIN D3
 #define DHT_TYPE DHT11
 #define PIR_PIN D2
-#define ALARM_PIN D3
+#define ALARM_PIN D6
+#define LED_PIN D7
 
 // Objects
 DHT dht(DHT_PIN, DHT_TYPE);
-//WiFiClientSecure esp_client;
 PubSubClient *mqtt_client;
-//PubSubClient mqtt_client(esp_client);
-BearSSL::CertStore certStore;
+CertStore certStore;
 
 // Constants
 const char* SSID      = "iliadbox-615C99";
@@ -149,14 +148,11 @@ void check_intrusion()
     int pir_value = digitalRead(PIR_PIN);
 
     if (pir_value == HIGH) {
-      Serial.println("Active");
       alarm_state = true;
       mqtt_client->publish(TOPIC_DET, String("1").c_str());      
       tone(ALARM_PIN, 440);
-    } else {
-      Serial.println("Disable");
+    } else
       digitalWrite(ALARM_PIN, LOW);
-    } 
   }
 
   // Disable the alarm if the system is disabled
@@ -171,6 +167,7 @@ void setup()
   Serial.begin(9600);
   pinMode(PIR_PIN, INPUT);
   pinMode(ALARM_PIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
   dht.begin();
   
   setup_wifi();
@@ -178,8 +175,8 @@ void setup()
   // Wi-Fi Client with TLS
   LittleFS.begin();
   setDateTime();
-  int numCerts = certStore.initCertStore(LittleFS, PSTR("/certs.idx"), PSTR("/certs.ar"));
-  BearSSL::WiFiClientSecure *bear = new BearSSL::WiFiClientSecure();
+  certStore.initCertStore(LittleFS, PSTR("/certs.idx"), PSTR("/certs.ar"));
+  WiFiClientSecure *bear = new WiFiClientSecure();
   bear->setCertStore(&certStore);
   mqtt_client = new PubSubClient(*bear);
 
@@ -197,6 +194,12 @@ void loop()
   check_mqtt();
 
   mqtt_client->loop();
+
+  if (intrusion_system_state) {
+    digitalWrite(LED_PIN, HIGH);
+  } else {
+    digitalWrite(LED_PIN, LOW);
+  }
 
   get_temperature();
   check_intrusion();

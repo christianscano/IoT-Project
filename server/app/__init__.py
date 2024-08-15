@@ -6,7 +6,7 @@ from .models.mongo import IntrusionSystem
 from .apis import api
 from .frontend.pages import front
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 
 app.config.from_object('config.Config')
 
@@ -24,10 +24,10 @@ mongo_db.init_app(app)
 if IntrusionSystem.get_intrusion_system() is None:
     IntrusionSystem.create_intrusion_system()
 
-# Inizialize MQTT
-mqtt_handler.init_mqtt(app)
+# # Inizialize MQTT
+# mqtt_handler.init_mqtt(app)
 
 app.register_blueprint(api, url_prefix='/api/v1')
-app.register_blueprint(front)
+app.register_blueprint(front, url_prefix='/')
 
 app.run(host='0.0.0.0', port=5000)

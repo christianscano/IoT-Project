@@ -1,0 +1,26 @@
+/* login.css */
+
+/* Centering the login card */
+.container {
+    max-width: 100%;
+}
+
+/* Specific styling for the login card */
+.card {
+    width: 400px;
+    margin: auto; /* Centering the card */
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+}
+
+#loginMessage {
+    margin-top: 15px;
+}

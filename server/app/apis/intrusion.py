@@ -36,8 +36,9 @@ def disable_detection_system():
         IntrusionSystem.update_status(False)
         mqtt_handler.disable_intrusion_system()
 
-        IntrusionSystem.add_alarm_log(False)
-        mqtt_handler.disable_alarm()
+        if IntrusionSystem.get_last_alarm_status():
+            IntrusionSystem.add_alarm_log(False)
+            mqtt_handler.disable_alarm()
 
         return '', 200
     except:

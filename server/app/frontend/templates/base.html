@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - Server Room Control Interface</title>
+    <link rel="stylesheet" href="{{ url_for('frontend.static', filename='style/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('frontend.static', filename='style/default.css') }}">
+    {% block header %}{% endblock %}
+</head>
+<body>    
+    <!-- Top Bar -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="logo.png" alt="LOGO" class="d-inline-block align-text-top" style="width: 50px;">
+            </a>
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>
