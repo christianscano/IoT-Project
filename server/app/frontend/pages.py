@@ -11,6 +11,10 @@ front = Blueprint(
 def index():
     return render_template('login.html')
 
+@front.route('/home')
+def home():
+    return render_template('home.html')
+
 @front.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')

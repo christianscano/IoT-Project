@@ -4,42 +4,75 @@
 body {
     background-color: #f8f9fa;
     font-family: Arial, sans-serif;
+    padding-top: 3.5rem; /* Altezza della navbar in rem */
+    overflow-x: hidden; /* Evita lo scrolling orizzontale non desiderato */
 }
 
 /* Navbar Styling */
 .navbar {
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 0.1rem solid #e0e0e0;
 }
 
 /* Card Styling */
 .card {
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.625rem;
+    box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
     background-color: #fff;
 }
 
 /* Sidebar Styling */
 .sidebar {
-    top: 0;
-    left: 0;
-    padding-top: 20px;
+    height: calc(100vh - 3.5rem);
+    padding-top: 1.25rem;
+    position: fixed;
+    top: 3.5rem;
+    width: 16.666667%;
+    overflow-y: auto;
 }
 
 .sidebar .nav-link {
     font-weight: normal;
     color: #333;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 0.625rem;
+    border-radius: 0.3125rem;
 }
 
 .sidebar .nav-link.active {
     background-color: #e9ecef;
     color: #000;
     font-weight: bold;
-    border-radius: 15px;
+    border-radius: 0.9375rem;
 }
 
 /* Utility Classes */
 .text-bold {
     font-weight: bold;
+}
+
+/* Media Query per dispositivi mobili */
+@media (max-width: 767.98px) {
+    .sidebar {
+        width: 100%; /* La sidebar occupa tutta la larghezza su dispositivi mobili */
+        height: auto;
+        position: relative;
+        top: 0;
+    }
+
+    .main-content {
+        margin-top: 1rem;
+        margin-left: 0; /* Rimuovi l'offset su dispositivi mobili */
+        width: 100%; /* Il contenuto principale occupa tutta la larghezza su dispositivi mobili */
+    }
+
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-brand img {
+        width: 40px; /* Riduci la dimensione del logo per i dispositivi mobili */
+    }
+
+    .sidebar .nav-link {
+        padding: 0.5rem;
+    }
 }

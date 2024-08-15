@@ -2,20 +2,25 @@
 
 /* Main Content Styling */
 .main-content {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    margin-top: 1.25rem;
+    min-height: calc(100vh - 6rem);
+    overflow-y: auto;
+    margin-left: 16.666667%;
+    width: 83.333333%;
 }
 
 .main-content .h2 {
     font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 20px; /* Use space instead of a line between the title and card */
+    margin-bottom: 1.25rem;
 }
 
 .card-title {
     font-weight: bold;
     font-size: 1.25rem;
-    margin-bottom: 15px; /* Add space before the line inside the card */
+    margin-bottom: 0.9375rem;
 }
 
 .card p {
@@ -24,11 +29,36 @@
 
 .card p strong {
     display: inline-block;
-    width: 80px;
+    width: 5rem;
 }
 
-/* Retain line inside the card */
 .card hr {
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0.9375rem;
+}
+
+/* Media Query per dispositivi mobili */
+@media (max-width: 767.98px) {
+    .main-content {
+        padding: 1rem;
+        margin-top: 1rem;
+        min-height: auto;
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .main-content .h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-title {
+        font-size: 1.125rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .card p strong {
+        width: auto;
+        display: block;
+    }
 }

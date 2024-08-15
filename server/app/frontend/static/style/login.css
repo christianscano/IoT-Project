@@ -3,12 +3,16 @@
 /* Centering the login card */
 .container {
     max-width: 100%;
+    min-height: calc(100vh - 3.5rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Specific styling for the login card */
 .card {
-    width: 400px;
-    margin: auto; /* Centering the card */
+    width: 25rem;
+    margin: auto;
 }
 
 h1 {
@@ -22,5 +26,15 @@ label {
 }
 
 #loginMessage {
-    margin-top: 15px;
+    margin-top: 0.9375rem;
+}
+
+@media (max-width: 767.98px) {
+    .card {
+        width: 90%; /* Riduci la larghezza della card per piccoli schermi */
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
 }
