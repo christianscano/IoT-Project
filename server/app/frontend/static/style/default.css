@@ -44,6 +44,10 @@ body {
     border-radius: 0.9375rem;
 }
 
+.navbar-brand img {
+    width: 50px;
+}
+
 /* Utility Classes */
 .text-bold {
     font-weight: bold;
@@ -52,7 +56,7 @@ body {
 /* Media Query per dispositivi mobili */
 @media (max-width: 767.98px) {
     .sidebar {
-        width: 100%; /* La sidebar occupa tutta la larghezza su dispositivi mobili */
+        width: 100%;
         height: auto;
         position: relative;
         top: 0;
@@ -60,8 +64,8 @@ body {
 
     .main-content {
         margin-top: 1rem;
-        margin-left: 0; /* Rimuovi l'offset su dispositivi mobili */
-        width: 100%; /* Il contenuto principale occupa tutta la larghezza su dispositivi mobili */
+        margin-left: 0;
+        width: 100%;
     }
 
     .navbar {
@@ -69,8 +73,8 @@ body {
     }
 
     .navbar-brand img {
-        width: 40px; /* Riduci la dimensione del logo per i dispositivi mobili */
-    }
+        width: 40px;
+}
 
     .sidebar .nav-link {
         padding: 0.5rem;

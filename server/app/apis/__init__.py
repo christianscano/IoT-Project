@@ -6,7 +6,7 @@ from .intrusion import api_intrusion
 
 api = Blueprint('api', __name__)
 
-api.register_blueprint(api_user, url_prefix='/user')
+api.register_blueprint(api_user, url_prefix='/users')
 api.register_blueprint(api_logs, url_prefix='/logs')
 api.register_blueprint(api_temp, url_prefix='/temperature')
 api.register_blueprint(api_intrusion, url_prefix='/intrusion')

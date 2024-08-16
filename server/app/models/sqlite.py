@@ -78,21 +78,23 @@ class User(db.Model):
         return user
     
     @classmethod
-    def find_user(cls, username):
-        return cls.query.filter_by(username=username).first()
+    def find_user(cls, id):
+        return cls.query.filter_by(id=id).first()
     
     @classmethod
     def get_all_users(cls):
         return cls.query.all()
     
     @classmethod
-    def reset_password(cls, username, new_password):
-        user = cls.query.filter_by(username=username).first()
+    def reset_password(cls, id, new_password):
+        user = cls.query.filter_by(id=id).first()
         user.password = new_password
         db.session.commit()
     
-    def delete_user(self):
-        db.session.delete(self)
+    @classmethod
+    def delete_user(cls, id):
+        user = cls.query.filter_by(id=id).first()
+        db.session.delete(user)
         db.session.commit()
     
     @classmethod

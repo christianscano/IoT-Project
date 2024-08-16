@@ -13,7 +13,11 @@
     <nav class="navbar navbar-light bg-light fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="logo.png" alt="logo" class="d-inline-block align-text-top" style="width: 50px;">
+                <img 
+                    src="{{ url_for('frontend.static', filename='assets/logo_unica.png') }}" 
+                    alt="logo_unica" 
+                    class="d-inline-block align-text-top"
+                >
             </a>
         </div>
     </nav>

@@ -19,8 +19,25 @@ def rfid_auth():
         return '', 200
     except:
         return '', 500
+    
+@api_user.route('/add_tag', methods=['POST'])
+@auth
+@admin_only
+def add_new_tag():
+    try:
+        tag_id   = request.json['tag_id'].strip().upper()
+        username = request.json['username'].strip()
 
-@api_user.route('/login', methods=['POST'])
+        User.assign_tag(username, tag_id)
+        
+        return jsonify({"status": "Tag correctly assigned"}), 200
+    except KeyError:
+        return jsonify({"status": "Invalid parameters"}), 400
+    except Exception as e:
+        return jsonify({"status": e.message}), 400
+
+
+@api_user.route('/signin', methods=['POST'])
 def login():
     try:
         username = request.json['username'].strip()
@@ -36,13 +53,13 @@ def login():
             session['username'] = user.username
             session['role']     = user.role
 
-            return '', 201
+            return jsonify({"status": "ok"}), 200
         else:
-            return jsonify({"status": "Wrong credentials"}), 401
+            return jsonify({"status": "Wrong credentials"}), 400
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
     except VerifyMismatchError:
-        return jsonify({"status": "Wrong credentials"}), 401
+        return jsonify({"status": "Wrong credentials"}), 400
     
 @api_user.route('/logout')
 @auth
@@ -51,9 +68,19 @@ def logout():
     session.pop('username', None)
     session.pop('role', None)
 
-    return '', 200
+    return jsonify({"status": "ok"}), 200
 
-@api_user.route('/add', methods=['POST'])
+@api_user.route('/')
+@auth
+@admin_only
+def retrive_list_users():
+    users = User.get_all_users()
+    return jsonify({
+        "status": "ok",
+        "data": [user.to_dict() for user in users]
+    }), 200
+
+@api_user.route('/', methods=['POST'])
 @auth
 @admin_only
 def add_new_user():
@@ -72,48 +99,30 @@ def add_new_user():
 
         User.create_user(username, name, surname, role, password)
                 
-        return '', 201
+        return jsonify({"status": "User created succesfully"}), 200
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
     except UserExistException as e:
-        return jsonify({"status", e.message}), 401
+        return jsonify({"status": e.message}), 400
     except InvalidRoleException as e:
-        return jsonify({"status", e.message}), 401 
+        return jsonify({"status": e.message}), 400 
 
-@api_user.route('/delete', methods=['POST'])
+@api_user.route('/<int:id>', methods=['DELETE'])
 @auth
 @admin_only
 def delete_user():
     try:
-        username = request.json['username'].strip()
-
-        user = User.find_user(username)
+        user = User.find_user(id)
         if not user:
-            return jsonify({"status": "User not found"}), 401
+            return jsonify({"status": "User not found"}), 400
 
-        user.delete_user()
+        User.delete_user(id)
 
-        return '', 201
+        return jsonify({"status": "User deleted succesfully"}), 200
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
-
-@api_user.route('/add_tag', methods=['POST'])
-@auth
-@admin_only
-def add_new_tag():
-    try:
-        tag_id   = request.json['tag_id'].strip().upper()
-        username = request.json['username'].strip()
-
-        User.assign_tag(username, tag_id)
-        
-        return '', 201
-    except KeyError:
-        return jsonify({"status": "Invalid parameters"}), 400
-    except Exception as e:
-        return jsonify({"status": e.message}), 401
-
-@api_user.route('/reset_password', methods=['POST'])
+    
+@api_user.route('/change_password', methods=['POST'])
 @auth
 def reset_password():
     try:
@@ -127,10 +136,3 @@ def reset_password():
         return '', 201
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
-    
-@api_user.route('/all')
-@auth
-@admin_only
-def retrive_list_users():
-    users = User.get_all_users()
-    return jsonify([user.to_dict() for user in users]), 200
