@@ -4,12 +4,13 @@
 
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('frontend.static', filename='style/login.css') }}">
+<script src="{{ url_for('frontend.static', filename='js/login.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center">
+<div class="d-flex justify-content-center align-items-center">
     <div class="text-center">
-        <h1 class="fw-bold text-center">Server Room Control Interface</h1>
+        <h1 class="fw-bold text-center">User Area</h1>
         <div class="card p-5 mt-4 mx-auto">
             <div class="text-start">
                 <label for="username" class="form-label">Username</label>
@@ -24,6 +25,4 @@
         </div>
     </div>
 </div>
-<script src="{{ url_for('frontend.static', filename='js/jquery-3.7.1.min.js') }}"></script>
-<script src="{{ url_for('frontend.static', filename='js/login.js') }}"></script>
 {% endblock %}

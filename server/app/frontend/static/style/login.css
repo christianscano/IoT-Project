@@ -1,15 +1,5 @@
 /* login.css */
 
-/* Centering the login card */
-.container {
-    max-width: 100%;
-    min-height: calc(100vh - 3.5rem);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Specific styling for the login card */
 .card {
     width: 25rem;
     margin: auto;
