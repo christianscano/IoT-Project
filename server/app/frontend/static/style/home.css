@@ -8,28 +8,31 @@
 /* Sidebar */
 @media (min-width: 992px) {
     .bd-sidebar {
-        position:-webkit-sticky;
-        position:sticky;
-        top:5rem;
-        display:block !important;
-        height:calc(100vh - 6rem);
-        padding-left:.25rem;
-        margin-left:-.25rem;
-        overflow-y:auto
-    
+        position       : -webkit-sticky;
+        position       : sticky;
+        top            : 5rem;
+        display        : block !important;
+        height         : calc(100vh - 5.4rem);
+        overflow-y     : auto;
+        margin-left    : -.25rem;
+        padding        : .5rem;
+        padding-right  : 1.50rem;
+        padding-left   : .25rem;
+        justify-content: space-between;
+        transition     : all 0.3s ease;
     }
 }
 @media (max-width: 991.98px) {
     .bd-sidebar .offcanvas-lg {
-        border-right-color:var(--bs-border-color);
-        box-shadow:var(--bs-box-shadow-lg)
+        border-right-color: var(--bs-border-color);
+        box-shadow        : var(--bs-box-shadow-lg)
     
     }
 }
 @media (max-width: 991.98px) {
     .bd-sidebar .offcanvas-lg {
         border-right-color: var(--bs-border-color);
-        box-shadow: var(--bs-box-shadow-lg);
+        box-shadow        : var(--bs-box-shadow-lg);
     }
 }
 @media (max-width: 991.98px) {
@@ -38,44 +41,41 @@
     }
 }
 .bd-sidebar {          
-    padding: 10px;
-    justify-content: space-between;
-    transition: all 0.3s ease;
-    grid-area:sidebar
+    grid-area      : sidebar
 }
 .bd-sidebar .nav-link {
-    font-size: 16px;
-    height: 50px;
-    line-height: 50px;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
-    color: #5a5a5a;
-    margin-bottom: 10px;
+    font-size       : 16px;
+    height          : 50px;
+    line-height     : 50px;
+    display         : flex;
+    align-items     : center;
+    padding-left    : 20px;
+    padding-right   : 20px;
+    color           : #5a5a5a;
+    margin-bottom   : 10px;
     background-color: transparent;
-    transition: all 0.3s ease;
+    transition      : all 0.3s ease;
 }
 .bd-sidebar .nav-link:hover, 
 .bd-sidebar .nav-link.active {
     background-color: #e0e0e0;
-    color: #4a4a4a;
-    font-weight: bold;
+    color           : #1B222C;
+    font-weight     : bold;
 }
 .bd-sidebar .nav-link i {
-    font-size: 20px;
+    font-size   : 20px;
     margin-right: 10px;
-    transition: all 0.3s ease;
+    transition  : all 0.3s ease;
 }
 .bd-sidebar .nav-link .fa{
-    transition:all 1s;
+    transition: all 1s;
 }
 .bd-sidebar .nav-link:hover .fa{
-    transform:rotate(360deg);
+    transform: rotate(360deg);
 }
 .bd-sidebar .nav-link .arrow {
     margin-left: auto;
-    transition: transform 0.3s ease;
+    transition : transform 0.3s ease;
 }
 .bd-sidebar .nav-link.collapsed .arrow {
     transform: rotate(90deg);

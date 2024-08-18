@@ -26,7 +26,7 @@ body {
     .bd-layout {
         display: grid;
         grid-template-areas: "sidebar main";
-        grid-template-columns: 1fr 5fr;
+        grid-template-columns: 1.05fr 5fr;
         gap: 1.5rem;
     }
 }
@@ -44,7 +44,7 @@ body {
 }
 .bd-navbar {
     padding: .75rem 0;
-    background-color: #f0f0f0;
+    background-color: #1B222C;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15),inset 0 -1px 0 rgba(255,255,255,0.15)
 }
 .bd-navbar .navbar-toggler {
@@ -54,17 +54,17 @@ body {
 }
 .bd-navbar .navbar-toggler:hover,
 .bd-navbar .navbar-toggler:focus {
-    color:#000000
+    color:#ffffff
 }
 .bd-navbar .navbar-toggler.active {
     font-weight:600;
-    color:#000000
+    color:#ffffff
 }
 .bd-navbar .navbar-toggler,
 .bd-navbar .nav-link {
     padding-right:.25rem;
     padding-left:.25rem;
-    color:rgba(0, 0, 0, 0.85)
+    color: #ffffff
 }
 .bd-navbar .navbar-toggler:first-child {
     margin-left:-.5rem
@@ -77,7 +77,7 @@ body {
     height:1.5rem
 }
 .bd-navbar .navbar-brand {
-    color:#000000;
+    color:#ffffff;
     transition:transform 0.2s ease-in-out
 }
 .bd-navbar .navbar-brand:hover {
