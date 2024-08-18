@@ -2,7 +2,8 @@ from flask import Blueprint, request, session, jsonify
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from app.models.sqlite import *
-from .utils import auth, admin_only, validate_input
+from app.utils import auth, admin_only
+from .utils import validate_input
 
 api_user = Blueprint('user', __name__)
 
@@ -95,7 +96,7 @@ def add_new_user():
             not validate_input(name) or \
             not validate_input(surname) or \
             not validate_input(password):
-            return jsonify({"status": "Invalid characters"}), 401
+            return jsonify({"status": "Invalid characters"}), 400
 
         User.create_user(username, name, surname, role, password)
                 
@@ -112,7 +113,7 @@ def add_new_user():
 @admin_only
 def delete_user():
     try:
-        user = User.find_user(id)
+        user = User.find_user_by_id(id)
         if not user:
             return jsonify({"status": "User not found"}), 400
 
@@ -126,13 +127,23 @@ def delete_user():
 @auth
 def reset_password():
     try:
+        old_password = request.json['old_password'].strip()
         new_password = request.json['new_password'].strip()
 
         if not validate_input(new_password):
-            return jsonify({"status": "Invalid characters"}), 401
- 
-        User.reset_password(session['username'], new_password)
+            return jsonify({"status": "Invalid characters"}), 400
 
-        return '', 201
+        try:
+            User.reset_password(
+                session['id'], 
+                old_password, 
+                new_password
+            )
+        except InvalidCredentialsException as e:
+            return jsonify({"status": e.message}), 400
+        except UserNotExistException as e:
+            return jsonify({"status": e.message}), 400
+        
+        return jsonify({'status': 'Password changed successfully'}), 200
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400

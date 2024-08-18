@@ -24,7 +24,11 @@ class Temperatures(DynamicDocument):
     def to_dict(self):
         data = self.to_mongo().to_dict()
         data = json.loads(json_util.dumps(data))
-        data = {'value': data['value'], 'timestamp': data['timestamp']['$date']}
+        data = {
+            'value': data['value'], 
+            'timestamp': datetime.strptime(data['timestamp']['$date'], "%Y-%m-%dT%H:%M:%S.%fZ")\
+                .strftime("%B %d, %Y %H:%M:%S")
+        }
         return data
 
     @classmethod

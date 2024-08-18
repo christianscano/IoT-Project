@@ -8,21 +8,42 @@
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center">
-    <div class="text-center">
-        <h1 class="fw-bold text-center">User Area</h1>
-        <div class="card p-5 mt-4 mx-auto">
-            <div class="text-start">
+<div class="d-flex flex-column justify-content-center align-items-center" style="min-height: calc(100vh - 5.4rem);">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+        <h1 class="mb-4">User Area</h1>
+        <form id="login-form" class="needs-validation" novalidate>
+            <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" id="username" class="form-control" placeholder="Enter username">
+                <input type="text" class="form-control" id="username" name="username" required>
+                <div class="invalid-feedback">Please enter a username</div>
             </div>
-            <div class="text-start mt-3">
+            <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" class="form-control" placeholder="Enter password">
+                <input type="password" class="form-control" id="password" name="password" required>
+                <div class="invalid-feedback">Please enter a password</div>
             </div>
-            <button id="loginButton" class="btn btn-dark btn-block mt-4">Login</button>
+            <button type="submit" class="bd-btn btn btn-primary w-100 ">Login</button>
             <div id="loginMessage" class="mt-3"></div>
-        </div>
+        </form>
     </div>
 </div>
+<!-- <div class="container-fluid bd-gutter mt-3 text-center">
+    <div class="row align-items-center">
+        <div class="col">
+            <h1 class="fw-bold text-center">User Area</h1>
+            <div class="card p-5 mt-4 mx-auto">
+                <div class="text-start">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username">
+                </div>
+                <div class="text-start mt-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password">
+                </div>
+                <button id="loginButton" class="btn btn-dark btn-block mt-4">Login</button>
+                <div id="loginMessage" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div> -->
 {% endblock %}

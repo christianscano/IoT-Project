@@ -1,7 +1,7 @@
 from flask import Blueprint, request, session, jsonify
 from app.models.sqlite import *
 from app.utils import code_to_user_role
-from .utils import auth, admin_only
+from app.utils import auth, admin_only
 
 api_logs = Blueprint('logs', __name__)
 

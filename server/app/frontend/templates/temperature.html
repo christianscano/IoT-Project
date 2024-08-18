@@ -1,0 +1,26 @@
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="my-4">Temperatures</h2>
+    </div>
+</div>
+<div class="row d-flex flex-column">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title mt-2 mb-4">Current temperature</h5>
+            <p class="card-text m-0">Read value: <span id="current-temp">-- °C</span></p>
+            <p class="card-text text-secondary">
+                <small>Last updated: </small>
+                <small id="current-temp-time">--</small>
+            </p>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title mt-2 mb-4">Temperature trend (last 10 mins)</h5>
+            <canvas id="temperature-trend" style="height: 12rem;"></canvas>
+        </div>
+    </div>
+
+    <script src="{{ url_for('frontend.static', filename='js/temperature.js') }}"></script>
+</div>

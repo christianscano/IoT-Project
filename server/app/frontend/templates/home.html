@@ -5,90 +5,93 @@
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('frontend.static', filename='style/home.css') }}">
 <script src="{{ url_for('frontend.static', filename='js/dynamic-content.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js"></script>    
 {% endblock %}
 
 
 {% block content %} 
-<!-- Sidebar -->
-<aside class="bd-sidebar border-end">
-    <div id="bdSidebar" class="offcanvas-lg offcanvas-start" tabindex="-1">
-        <div class="offcanvas-header border-bottom">
-            <button class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" data-bs-target="#bdSidebar"></button>
+<div class="container-fluid bd-gutter mt-3 bd-layout">
+    <!-- Sidebar -->
+    <aside class="bd-sidebar border-end">
+        <div id="bdSidebar" class="offcanvas-lg offcanvas-start" tabindex="-1">
+            <div class="offcanvas-header border-bottom">
+                <button class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" data-bs-target="#bdSidebar"></button>
+            </div>
+            <div class="offcanvas-body">
+                <nav class="bd-links w-100">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard" data-url="/dashboard">
+                                <i class="fa fa-tachometer-alt"></i> 
+                                <span class="text"> Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-url="/temperature">
+                                <i class="fa fa-temperature-three-quarters"></i> 
+                                <span class="text">Temperature</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-url="/intrusion">
+                                <i class="fa fa-bell"></i>
+                                <span class="text">Intrusion</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-url="/logs">
+                                <i class="fa bi-person-lines-fill"></i>
+                                <span class="text">Logs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" data-bs-toggle="collapse" href="#settingsMenu" role="button">
+                                <i class="fa fa-gears"></i> <span class="text">Settings</span>
+                                <i class="fa-solid fa-chevron-right arrow"></i>
+                            </a>
+                            <div class="collapse" id="settingsMenu">
+                                <ul class="nav flex-column ms-3">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" data-url="/users">
+                                            Users
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" data-url="/accesses">
+                                            Accesses
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    <hr>
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" data-bs-toggle="collapse" href="#usersMenu" role="button">
+                                <i class="fa fa-circle-user"></i> <span class="text">User</span>
+                                <i class="fa-solid fa-chevron-right arrow"></i>
+                            </a>
+                            <div class="collapse" id="usersMenu">
+                                <ul class="nav flex-column ms-3">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Change Password</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-        <div class="offcanvas-body">
-            <nav class="bd-links w-100">
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" data-url="/dashboard">
-                            <i class="fa fa-tachometer-alt"></i> 
-                            <span class="text"> Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-url="/temperature">
-                            <i class="fa fa-temperature-three-quarters"></i> 
-                            <span class="text">Temperature</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-url="/intrusion">
-                            <i class="fa fa-bell"></i>
-                            <span class="text">Intrusion</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-url="/logs">
-                            <i class="fa bi-person-lines-fill"></i>
-                            <span class="text">Logs</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#settingsMenu" role="button">
-                            <i class="fa fa-gears"></i> <span class="text">Settings</span>
-                            <i class="fa-solid fa-chevron-right arrow"></i>
-                        </a>
-                        <div class="collapse" id="settingsMenu">
-                            <ul class="nav flex-column ms-3">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-url="/users">
-                                        Users
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-url="/accesses">
-                                        Accesses
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-                <hr>
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#usersMenu" role="button">
-                            <i class="fa fa-circle-user"></i> <span class="text">User</span>
-                            <i class="fa-solid fa-chevron-right arrow"></i>
-                        </a>
-                        <div class="collapse" id="usersMenu">
-                            <ul class="nav flex-column ms-3">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Change Password</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Logout</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-</aside>
+    </aside>
 
-<!-- Main content -->
-<main id="main-content" class="bd-main order-1 overflow-y-auto p-4">
-    <!-- Content loaded dynamically -->
-</main>
+    <!-- Main content -->
+    <main id="main-content" class="bd-main order-1 overflow-y-auto p-4">
+        <!-- Content loaded dynamically -->
+    </main>
+</div>
 {% endblock %}

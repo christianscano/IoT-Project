@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from .utils import auth, security_only
+from app.utils import auth, security_only
 from app.models.mongo import IntrusionSystem
 from app.mqtt import mqtt_handler
 

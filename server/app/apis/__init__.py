@@ -1,5 +1,5 @@
 from flask import Blueprint
-from .user import api_user
+from .users import api_user
 from .logs import api_logs
 from .temperature import api_temp
 from .intrusion import api_intrusion

@@ -1,6 +1,7 @@
 from app.db import sqlite_db as db
 from app.utils import user_role_to_code, code_to_user_role
 from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 from datetime import datetime
 
 # ------------------
@@ -29,6 +30,11 @@ class TagExistException(Exception):
 class UserNotAllowedException(Exception):
     def __init__(self):
         self.message = 'Operation not allowed for this user'
+        super().__init__(self.message)
+
+class InvalidCredentialsException(Exception):
+    def __init__(self):
+        self.message = 'The old password is incorrect'
         super().__init__(self.message)
 
 # ----------------
@@ -78,7 +84,11 @@ class User(db.Model):
         return user
     
     @classmethod
-    def find_user(cls, id):
+    def find_user(cls, username):
+        return cls.query.filter_by(username=username).first()
+    
+    @classmethod
+    def find_user_by_id(cls, id):
         return cls.query.filter_by(id=id).first()
     
     @classmethod
@@ -86,10 +96,21 @@ class User(db.Model):
         return cls.query.all()
     
     @classmethod
-    def reset_password(cls, id, new_password):
+    def reset_password(cls, id, old_password, new_password):
         user = cls.query.filter_by(id=id).first()
-        user.password = new_password
-        db.session.commit()
+
+        if user is None:
+            raise UserNotExistException()
+        
+        try:
+            ph = PasswordHasher()
+            ph.verify(user.password, old_password)
+
+            user.password = ph.hash(new_password)
+            
+            db.session.commit()
+        except VerifyMismatchError:
+            raise InvalidCredentialsException()
     
     @classmethod
     def delete_user(cls, id):
@@ -121,7 +142,7 @@ class User(db.Model):
             'username': self.username,
             'name'    : self.name,
             'surname' : self.surname,
-            'role'    : self.role,
+            'role'    : code_to_user_role(self.role),
             'tag_id'  : self.tag_id
         }
     

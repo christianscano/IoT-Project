@@ -1,6 +1,6 @@
 from flask import Blueprint, request, session, jsonify
 from app.models.mongo import Temperatures
-from .utils import auth, admin_only
+from app.utils import auth, admin_only
 from datetime import timedelta
 
 api_temp = Blueprint('temperature', __name__)
@@ -14,11 +14,11 @@ def retrieve_last_temperature():
         Temperatures.get_last_measure().to_dict()
     ), 200
 
-@api_temp.route('/last_hour')
+@api_temp.route('/trend')
 @auth
 @admin_only
 def retrieve_last_hour():
-    temps = Temperatures.get_time_range(timedelta(hours=1))
+    temps = Temperatures.get_time_range(timedelta(minutes=10))
     return jsonify({
         'values': [temp.to_dict() for temp in temps]
     }), 200
