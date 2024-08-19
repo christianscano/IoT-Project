@@ -1,0 +1,29 @@
+<div class="vstack gap-3">
+    <h2 class="my-4">Intrusion Detection</h2>
+    
+    <!-- System Status Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title mt-2 mb-4">System status</h5>
+            <hr>
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+                <p class="card-text m-0">Current state: <span id="system-status">--</span></p>
+                <button id="system-button" class="btn bd-btn mt-3 mt-md-0">Disable</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Alarm Status Card (initially hidden) -->
+    <div id="alarm-card" class="card mb-4 d-none">
+        <div class="card-body">
+            <h5 class="card-title mt-2 mb-4">Alarm status</h5>
+            <hr>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <p class="card-text m-0">Current state: <span id="alarm-status">--</span></p>
+                <button id="alarm-button" class="btn bd-btn mt-3 mt-md-0" disabled>Shut off</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+<script src="{{ url_for('frontend.static', filename='js/intrusion.js') }}"></script>

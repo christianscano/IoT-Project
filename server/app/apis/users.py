@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, jsonify
+from flask import Blueprint, request, session, jsonify, make_response
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from app.models.sqlite import *
@@ -34,9 +34,14 @@ def add_new_tag():
         return jsonify({"status": "Tag correctly assigned"}), 200
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
-    except Exception as e:
+    except UserNotExistException as e:
         return jsonify({"status": e.message}), 400
-
+    except UserNotAllowedException as e:
+        return jsonify({"status": e.message}), 400
+    except TagExistException as e:
+        return jsonify({"status": e.message}), 400
+    except:
+        return jsonify({"status": "Something went wrong"}), 500
 
 @api_user.route('/signin', methods=['POST'])
 def login():
@@ -54,13 +59,15 @@ def login():
             session['username'] = user.username
             session['role']     = user.role
 
-            return jsonify({"status": "ok"}), 200
+            return jsonify({"status": "User logged"}), 200
         else:
             return jsonify({"status": "Wrong credentials"}), 400
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
     except VerifyMismatchError:
         return jsonify({"status": "Wrong credentials"}), 400
+    except:
+        return jsonify({"status": "Something went wrong"}), 500
     
 @api_user.route('/logout')
 @auth
@@ -69,17 +76,20 @@ def logout():
     session.pop('username', None)
     session.pop('role', None)
 
-    return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "Ok"}), 200
 
 @api_user.route('/')
 @auth
 @admin_only
 def retrive_list_users():
-    users = User.get_all_users()
-    return jsonify({
-        "status": "ok",
-        "data": [user.to_dict() for user in users]
-    }), 200
+    try:
+        users = User.get_all_users()
+        return jsonify({
+            "status": "Information retrieved",
+            "data": [user.to_dict() for user in users]
+        }), 200
+    except:
+        return jsonify({"status": "Something went wrong"}), 500
 
 @api_user.route('/', methods=['POST'])
 @auth
@@ -106,22 +116,30 @@ def add_new_user():
     except UserExistException as e:
         return jsonify({"status": e.message}), 400
     except InvalidRoleException as e:
-        return jsonify({"status": e.message}), 400 
+        return jsonify({"status": e.message}), 400
+    except:
+        return jsonify({"status": "Something went wrong"}), 500
 
 @api_user.route('/<int:id>', methods=['DELETE'])
 @auth
 @admin_only
-def delete_user():
+def delete_user(id):
     try:
         user = User.find_user_by_id(id)
         if not user:
             return jsonify({"status": "User not found"}), 400
+        elif user.username == session['username']:
+            return jsonify({"status": "You can't delete yourself"}), 400
+        elif user.id == 0:
+            return jsonify({"status": "You can't delete this user"}), 400
 
         User.delete_user(id)
 
         return jsonify({"status": "User deleted succesfully"}), 200
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
+    except:
+        return jsonify({"status": "Something went wrong"}), 500
     
 @api_user.route('/change_password', methods=['POST'])
 @auth
@@ -147,3 +165,5 @@ def reset_password():
         return jsonify({'status': 'Password changed successfully'}), 200
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
+    except:
+        return jsonify({"status": "Something went wrong"}), 500

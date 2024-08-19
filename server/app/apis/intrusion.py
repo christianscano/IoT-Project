@@ -11,9 +11,12 @@ api_intrusion = Blueprint('intrusion', __name__)
 @security_only
 def retrieve_system_status():
     try:
-        return jsonify({'enabled': IntrusionSystem.get_last_status()}), 200
+        return jsonify({
+            'status': 'Information retrieved.',
+            'enabled': IntrusionSystem.get_last_status()
+        }), 200
     except:
-        return '', 500
+        return jsonify({"stauts": "Status not available."}), 500
 
 @api_intrusion.route('/enable')
 @auth
@@ -24,9 +27,9 @@ def enable_detection_system():
             IntrusionSystem.update_status(True)
             mqtt_handler.enable_intrusion_system()
 
-        return '', 200
+        return jsonify({"status": "System activated correctly."}), 200
     except:
-        return '', 500
+        return jsonify({"status": "Error activacting the system."}) , 500
 
 @api_intrusion.route('/disable')
 @auth
@@ -40,9 +43,9 @@ def disable_detection_system():
             IntrusionSystem.add_alarm_log(False)
             mqtt_handler.disable_alarm()
 
-        return '', 200
+        return jsonify({"status": "System deactivated correctly."}), 200
     except:
-        return '', 500
+        return jsonify({"status": "Error deactivating the system."}) , 500
 
 @api_intrusion.route('/status_alarm')
 @auth
@@ -51,11 +54,17 @@ def retrieve_alarm_status():
     try:
         status = IntrusionSystem.get_last_alarm_status()
         if status is None:
-            return jsonify({'enabled': False}), 200
+            return jsonify({
+                'enabled': False,
+                "status": "Status retrieved correctly."
+            }), 200
         else:
-            return jsonify({'enabled': status.to_dict()['enabled']}), 200
+            return jsonify({
+                'enabled': status.to_dict()['enabled'],
+                "status": "Status retrieved correctly."
+            }), 200
     except:
-        return '', 500
+        return jsonify({"status": "Error retriving alarm status."}), 500
         
 @api_intrusion.route('/disable_alarm')
 @auth
@@ -65,6 +74,6 @@ def disable_alarm():
         if IntrusionSystem.get_last_status():
             IntrusionSystem.add_alarm_log(False)
             mqtt_handler.disable_alarm()
-        return '', 200
+        return jsonify({"status": "Alarm deactivated correctly."}), 200
     except:
-        return '', 500
+        return jsonify({"status": "Error deactivating the alarm."}), 500

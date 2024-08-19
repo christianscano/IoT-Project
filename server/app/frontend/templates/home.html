@@ -5,7 +5,7 @@
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('frontend.static', filename='style/home.css') }}">
 <script src="{{ url_for('frontend.static', filename='js/dynamic-content.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js"></script>    
+<script src="{{ url_for('frontend.static', filename='js/home.js') }}"></script>
 {% endblock %}
 
 
@@ -26,24 +26,29 @@
                                 <span class="text"> Dashboard</span>
                             </a>
                         </li>
+                        {% if role == 'admin' %}
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-url="/temperature">
                                 <i class="fa fa-temperature-three-quarters"></i> 
                                 <span class="text">Temperature</span>
                             </a>
                         </li>
+                        {% endif %}
+                        {% if role == 'security' %}
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-url="/intrusion">
                                 <i class="fa fa-bell"></i>
                                 <span class="text">Intrusion</span>
                             </a>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-url="/logs">
                                 <i class="fa bi-person-lines-fill"></i>
                                 <span class="text">Logs</span>
                             </a>
                         </li>
+                        {% if role == 'admin' %}
                         <li class="nav-item">
                             <a class="nav-link collapsed" data-bs-toggle="collapse" href="#settingsMenu" role="button">
                                 <i class="fa fa-gears"></i> <span class="text">Settings</span>
@@ -64,6 +69,7 @@
                                 </ul>
                             </div>
                         </li>
+                        {% endif %}
                     </ul>
                     <hr>
                     <ul class="nav nav-pills flex-column">

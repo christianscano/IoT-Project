@@ -1,33 +1,46 @@
 $(document).ready(function() {
-    function load_current_temperature() {
+    'use strict';
+
+    var temperatureChart = null;
+
+    function loadCurrentTemperature() {
         $.ajax({
             url: '/api/v1/temperature/status',
-            method: 'GET',
             success: function(response) {
-                $('#current-temp').text(response.value + ' °C');
-                $('#current-temp-time').text(response.timestamp);
+                $('#current-temp').text(response.data.value + ' °C');
+                $('#current-temp-time').text(response.data.timestamp);
             },
-            error: function() {
-                $('#current-temp').text('Error loading temperature');
+            error: function(response) {
+                $('#current-temp').text(response.status);
             }
         });
     }
 
-    function load_temperature_trend() {
+    function loadTemperatureTrend() {
         $.ajax({
             url: '/api/v1/temperature/trend',
-            method: 'GET',
             success: function(response) {
-                var trendData = response.values;
+                var trendData = Array();
+                var trendLabels = Array();
+
+                response.data.forEach(function(item) {
+                    trendData.push(item.value);
+                    trendLabels.push(item.timestamp);
+                });
 
                 var ctx = document.getElementById('temperature-trend').getContext('2d');
-                new Chart(ctx, {
+
+                if (temperatureChart) {
+                    temperatureChart.destroy();
+                }
+
+                temperatureChart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: time_data,
+                        labels: trendLabels,
                         datasets: [{
                             label: 'Temperature',
-                            data: trend_data,
+                            data: trendData,
                             backgroundColor: 'transparent',
                             fill: false,
                             borderColor: '#007bff',
@@ -71,17 +84,17 @@ $(document).ready(function() {
                     }
                 });
             },
-            error: function() {
-                $('#temperature-trend').text('Error loading trend data');
+            error: function(response) {
+                $('#temperature-trend').text(response.status);
             }
         });
     }
 
-    // Load initial temperature data
-    load_current_temperature();
-    load_temperature_trend();
+    clearAllIntervals();
 
-    // Auto-refresh temperature data every 10 seconds
-    setInterval(load_current_temperature, 10000);
-    setInterval(load_temperature_trend, 100000);
+    loadCurrentTemperature();
+    loadTemperatureTrend();
+
+    setInterval(loadCurrentTemperature, 10000);
+    setInterval(loadTemperatureTrend, 100000);
 });

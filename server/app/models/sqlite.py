@@ -139,6 +139,7 @@ class User(db.Model):
 
     def to_dict(self):
         return {
+            'id'      : self.id,
             'username': self.username,
             'name'    : self.name,
             'surname' : self.surname,

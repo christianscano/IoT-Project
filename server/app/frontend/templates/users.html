@@ -1,0 +1,109 @@
+<div class="vstack gap-3">
+    <h2 class="my-4">Intrusion Detection</h2>
+    
+    <div class="toolbar mb-2">
+        <button id="add-user-btn" class="btn bd-btn me-2" data-bs-toggle="modal" data-bs-target="#addUserModal">Add user</button>
+        <button id="delete-user-btn" class="btn bd-btn" data-bs-toggle="modal" data-bs-target="#deleteUserModal" disabled>Delete user</button>
+    </div>
+
+    <table id="users-table" 
+            class="table table-striped"
+            data-toggle="table"
+            data-ajax="loadUsers"
+            data-pagination="true"
+            data-page-size="20"
+            data-toolbar=".toolbar"
+            data-search="true"
+            data-visible-search="true"
+            data-click-to-select="true"
+            data-checkbox-header="false"
+            data-escape="true">
+        <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-field="id">ID</th>
+                <th data-field="name">Name</th>
+                <th data-field="surname">Surname</th>
+                <th data-field="username">Username</th>
+                <th data-field="role" data-formatter="roleFormatter">Role</th>
+            </tr>
+        </thead>
+    </table>
+
+</div>
+
+<!-- Modal for Adding User -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="add-user-form" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Register new user</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                        <div class="invalid-feedback">Please enter a name.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="surname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="surname" name="surname" required>
+                        <div class="invalid-feedback">Please enter a surname.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid-feedback">Please enter a username.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="invalid-feedback">Please enter a password.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-select" id="role" name="role" required>
+                            <option value="" disabled selected>Select a role</option>
+                            <option value="admin">System Manager</option>
+                            <option value="security">Security Staff</option>
+                            <option value="sysadmin">System Administrator</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a role.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn bd-btn">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Delete Confirmation -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteUserModalLabel">
+                    <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the selected users?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="confirm-delete-btn" type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+<script src=" https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/bootstrap-table.min.js "></script>
+<script src="{{ url_for('frontend.static', filename='js/users.js') }}"></script>  

@@ -59,7 +59,7 @@ bool send_auth_request(String card_id)
 {
   bool is_auth = false;
 
-  String url = "http://" + SERVER_ADDR + "/api/v1/user/access_rfid?uid=" + card_id;
+  String url = "http://" + SERVER_ADDR + "/api/v1/users/access_rfid?uid=" + card_id;
 
   http.begin(client, url);
 
