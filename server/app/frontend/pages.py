@@ -2,13 +2,13 @@ from flask import Blueprint, render_template, session
 from app.models.sqlite import User
 from app.utils import auth, admin_only, security_only, code_to_user_role
 
-
 front = Blueprint(
     'frontend', 
     __name__, 
     static_folder='static', 
     template_folder='templates',
 )
+
 
 @front.route('/')
 @front.route('/login')
@@ -63,8 +63,13 @@ def logs():
 def users():
     return render_template('users.html')
 
-
 @front.route('/change_password')
 @auth
 def change_password():
     return render_template('change_password.html')
+
+@front.route('/accesses')
+@auth
+@admin_only
+def accesses():
+    return render_template('accesses.html')

@@ -37,6 +37,12 @@ class InvalidCredentialsException(Exception):
         self.message = 'The old password is incorrect.'
         super().__init__(self.message)
 
+class ValueError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
 # ----------------
 # Database models
 # ----------------
@@ -171,73 +177,37 @@ class AccessLog(db.Model):
         log = cls(user_id, tag_id)
         db.session.add(log)
         db.session.commit()
-
-    @classmethod
-    def retrieve_all(cls):
-        logs = cls.query.with_entities(
-            cls.timestamp, 
-            User.username, 
-            User.name, 
-            User.surname, 
-            cls.tag_id
-        ).join(User)\
-        .order_by(cls.timestamp.desc())\
-        .all()
-
-        return [cls._to_dict(log) for log in logs]
-    
-    @classmethod
-    def retrieve_by_user(cls, username):
-        user = User.find_user(username)
-        if user is None:
-            raise UserNotExistException()
         
-        logs = cls.query.with_entities(
-            cls.timestamp, 
-            User.username, 
-            User.name, 
-            User.surname, 
-            cls.tag_id
-        ).join(User)\
-        .filter_by(id=user.id)\
-        .order_by(cls.timestamp.desc())\
-        .all()
-
-        return [cls._to_dict(log) for log in logs]
-    
     @classmethod
-    def retrieve_by_date(cls, begin, end, username=None):
-        begin = datetime.strptime(begin, '%Y-%m-%d')
-        end   = datetime.strptime(end, '%Y-%m-%d')
-
+    def retrieve_with_filters(cls, start_date=None, end_date=None, username=None):  
         if username:
             user = User.find_user(username)
             if user is None:
                 raise UserNotExistException()
-            
-            logs = cls.query.with_entities(
-                cls.timestamp, 
-                User.username, 
-                User.name, 
-                User.surname, 
-                cls.tag_id
-            ).join(User)\
-            .filter(cls.timestamp.between(begin, end))\
-            .filter_by(id=user.id)\
-            .order_by(cls.timestamp.desc())\
-            .all()
+
+        if start_date and end_date and start_date >= end_date:
+            raise ValueError('Invalid date range.')
+
+        query = cls.query.with_entities(
+            cls.timestamp,
+            User.username,
+            User.name,
+            User.surname,
+            cls.tag_id
+        ).join(User)
+
+        if username:
+            query = query.filter_by(username=username)
         
-        else:
-            logs = cls.query.with_entities(
-                cls.timestamp, 
-                User.username, 
-                User.name, 
-                User.surname, 
-                cls.tag_id
-            ).join(User)\
-            .filter(cls.timestamp.between(begin, end))\
-            .order_by(cls.timestamp.desc())\
-            .all()
+        if start_date:
+            query = query.filter(cls.timestamp >= start_date)
+        
+        if end_date:
+            query = query.filter(cls.timestamp <= end_date)
+
+        query = query.order_by(cls.timestamp.desc())
+
+        logs = query.all()
 
         return [cls._to_dict(log) for log in logs]
     

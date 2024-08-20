@@ -1,7 +1,7 @@
 <div class="vstack gap-3">
-    <h2 class="my-4">Intrusion Detection</h2>
+    <h2 class="my-4">Users Manager</h2>
     
-    <div class="toolbar mb-2">
+    <div id="toolbar" class="mb-2">
         <button id="add-user-btn" class="btn bd-btn me-2" data-bs-toggle="modal" data-bs-target="#addUserModal">Add user</button>
         <button id="delete-user-btn" class="btn bd-btn" data-bs-toggle="modal" data-bs-target="#deleteUserModal" disabled>Delete user</button>
     </div>
@@ -11,8 +11,8 @@
             data-toggle="table"
             data-ajax="loadUsers"
             data-pagination="true"
-            data-page-size="20"
-            data-toolbar=".toolbar"
+            data-page-size="10"
+            data-toolbar="#toolbar"
             data-search="true"
             data-visible-search="true"
             data-click-to-select="true"

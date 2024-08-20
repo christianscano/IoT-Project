@@ -1,34 +1,41 @@
-function loadUsers(params) {
-    $.ajax({
-        url: '/api/v1/users',
-        method: 'GET',
-        success: function(response) {
-            console.log(response.data);
-            params.success(response.data.filter(user => user.username !== 'admin'));
-        },
-        error: function(response) {
-            console.log(response.status);
-            showToast(response.status, 'danger');
-            params.error();
-        }
-    });
-}
-
-function roleFormatter(value, row, index) {
-    const roleMap = {
-        'admin'   : 'System Manager',
-        'security': 'Security Staff',
-        'sysadmin': 'System Administrator',
-    };
-
-    return roleMap[value] || value;
-}
-
-function customLoading() {
-    return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
-}
-
 $(document).ready(function() {
+    function loadUsers(params) {
+        $.ajax({
+            url: '/api/v1/users',
+            method: 'GET',
+            success: function(response) {
+                params.success(response.data.filter(user => user.username !== 'admin'));
+            },
+            error: function(response) {
+                showToast(response.status, 'danger');
+                params.error();
+            }
+        });
+    }
+    
+    window.roleFormatter = function(value, row, index) {
+        const roleMap = {
+            'admin'   : 'System Manager',
+            'security': 'Security Staff',
+            'sysadmin': 'System Administrator',
+        };
+    
+        return roleMap[value] || value;
+    }
+    
+    $('#users-table').bootstrapTable({
+        toggle        : "table",
+        ajax          : loadUsers,
+        pagination    : "true",
+        pageSize      : "10",
+        toolbar       : "#toolbar",
+        search        : "true",
+        visibleSearch : "true",
+        ClickToSelect : "true",
+        checkboxHeader: "false",
+        escape        : "true"
+    });
+
     $('#users-table').on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function() {
         var selections = $('#users-table').bootstrapTable('getSelections');
         $('#delete-user-btn').prop('disabled', selections.length === 0);
