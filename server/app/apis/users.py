@@ -42,6 +42,23 @@ def add_new_tag():
         return jsonify({"status": e.message}), 400
     except:
         return jsonify({"status": "Something went wrong"}), 500
+    
+@api_user.route('/remove_tag', methods=['POST'])
+@auth
+@admin_only
+def remove_tag():
+    try:
+        username = request.json['username'].strip()
+
+        User.remove_tag(username)
+        
+        return jsonify({"status": "Tag correctly removed"}), 200
+    except KeyError:
+        return jsonify({"status": "Invalid parameters"}), 400
+    except UserNotExistException as e:
+        return jsonify({"status": e.message}), 400
+    except:
+        return jsonify({"status": "Something went wrong"}), 500
 
 @api_user.route('/signin', methods=['POST'])
 def login():

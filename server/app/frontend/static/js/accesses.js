@@ -3,7 +3,7 @@ $(document).ready(function() {
         $.ajax({
             url: '/api/v1/users',
             success: function(response) {
-                params.success(response.data.filter(user => user.username !== 'admin'));
+                params.success(response.data.filter(user => user.role !== 'admin' && user.tag_id !== null));
             },
             error: function(response) {
                 showToast(response.status, 'danger');
@@ -11,18 +11,8 @@ $(document).ready(function() {
             }
         });
     }
-    
-    window.roleFormatter = function(value, row, index) {
-        const roleMap = {
-            'admin'   : 'System Manager',
-            'security': 'Security Staff',
-            'sysadmin': 'System Administrator',
-        };
-    
-        return roleMap[value] || value;
-    }
-    
-    $('#users-table').bootstrapTable({
+        
+    $('#tags-table').bootstrapTable({
         toggle        : "table",
         ajax          : loadUsers,
         pagination    : "true",
@@ -35,14 +25,14 @@ $(document).ready(function() {
         escape        : "true"
     });
 
-    $('#users-table').on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function() {
-        var selections = $('#users-table').bootstrapTable('getSelections');
-        $('#delete-user-btn').prop('disabled', selections.length === 0);
+    $('#tags-table').on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function() {
+        var selections = $('#tags-table').bootstrapTable('getSelections');
+        $('#delete-tag-btn').prop('disabled', selections.length === 0);
     });
 
     $('#confirm-delete-btn').click(function() {
-        var selections = $('#users-table').bootstrapTable('getSelections');
-        var ids = selections.map(user => user.id);
+        var selections = $('#tags-table').bootstrapTable('getSelections');
+        var users = selections.map(user => user.username);
 
         var requestsCompleted = 0;
 
@@ -54,16 +44,17 @@ $(document).ready(function() {
                 showToast(msg, 'danger');
             }
 
-            if (requestsCompleted === ids.length) {
-                $('#deleteUserModal').modal('hide');
-                $('#users-table').bootstrapTable('refresh');
+            if (requestsCompleted === users.length) {
+                $('#deleteTagModal').modal('hide');
+                $('#tags-table').bootstrapTable('refresh');
             }
         }
 
-        ids.forEach(function(id) {
+        users.forEach(function(user) {
             $.ajax({
-                url: '/api/v1/users/' + id,
-                type: 'DELETE',
+                url: '/api/v1/users/remove_tag',
+                type: 'POST',
+                data: JSON.stringify({ username: user }),
                 contentType: 'application/json',
                 success: function(response) {
                     handleCompletion(response.status, true);
@@ -75,7 +66,7 @@ $(document).ready(function() {
         });
     });
 
-    $('#add-user-form').submit(function(event) {
+    $('#add-tag-form').submit(function(event) {
         event.preventDefault();
         var form = $(this);
 
@@ -84,20 +75,17 @@ $(document).ready(function() {
             form.addClass('was-validated');
         } else {
             $.ajax({
-                url: '/api/v1/users',
+                url: '/api/v1/users/add_tag',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    name    : $('#name').val(),
-                    surname : $('#surname').val(),
                     username: $('#username').val(),
-                    password: $('#password').val(),
-                    role    : $('#role').val()
+                    tag_id  : $('#tag-id').val()
                 }),
                 success: function(response) {
                     showToast(response.status, 'success');
-                    $('#addUserModal').modal('hide');
-                    $('#users-table').bootstrapTable('refresh');
+                    $('#addTagModal').modal('hide');
+                    $('#tags-table').bootstrapTable('refresh');
                     form[0].reset();
                     form.removeClass('was-validated');
                 },
@@ -106,6 +94,29 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+
+    $('#addTagModal').on('shown.bs.modal', function () {
+        var $dropdown = $('#username');
+        
+        $dropdown.empty();        
+        $dropdown.append('<option value="" disabled selected>Select an user</option>');
+
+        $.ajax({
+            url: '/api/v1/users',
+            success: function(response) {
+                $.each(response.data, function(index, user) {
+                    if (user.role !== 'admin' && user.tag_id === null) {
+                        $dropdown.append(
+                            $('<option></option>').val(user.username).text(user.username)
+                        );
+                    }
+                });
+            },
+            error: function(response) {
+                showToast(response.status, 'danger');
+            }
+        });
     });
 
     clearAllIntervals();

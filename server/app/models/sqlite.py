@@ -143,6 +143,15 @@ class User(db.Model):
         user.tag_id = tag_id
         db.session.commit()
 
+    @classmethod
+    def remove_tag(cls, username):
+        user = cls.query.filter_by(username=username).first()
+        if user is None:
+            raise UserNotExistException()
+        
+        user.tag_id = None
+        db.session.commit()
+
     def to_dict(self):
         return {
             'id'      : self.id,

@@ -1,0 +1,76 @@
+<div class="vstack gap-3">
+    <h2 class="my-4">Accesses Manager</h2>
+    
+    <div id="toolbar" class="mb-2">
+        <button id="add-tag-btn" class="btn bd-btn me-2" data-bs-toggle="modal" data-bs-target="#addTagModal">Add tag</button>
+        <button id="delete-tag-btn" class="btn bd-btn" data-bs-toggle="modal" data-bs-target="#deleteTagModal" disabled>Delete tag</button>
+    </div>
+
+    <table id="tags-table" class="table table-striped">
+        <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-field="id">ID</th>
+                <th data-field="name">Name</th>
+                <th data-field="surname">Surname</th>
+                <th data-field="username">Username</th>
+                <th data-field="tag_id">Tag ID</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<!-- Modal for Adding tag -->
+<div class="modal fade" id="addTagModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="add-tag-form" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTagModalLabel">Assign new tag</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <select class="form-select" id="username" name="username" required></select>
+                        <div class="invalid-feedback">Please select a user.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tag-id" class="form-label">Tag ID</label>
+                        <input type="text" class="form-control" id="tag-id" name="tag-id" required>
+                        <div class="invalid-feedback">Please enter a tag ID.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn bd-btn">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Delete Confirmation -->
+<div class="modal fade" id="deleteTagModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteTagModalLabel">
+                    <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the selected users?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="confirm-delete-btn" type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+<script src="{{ url_for('frontend.static', filename='js/accesses.js') }}"></script>  

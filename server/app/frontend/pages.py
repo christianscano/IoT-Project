@@ -9,6 +9,13 @@ front = Blueprint(
     template_folder='templates',
 )
 
+def translate(role):
+    if role == 'admin':
+        return 'System Manager'
+    elif role == 'security':
+        return 'Security Staff'
+    else:
+        return 'System Administrator'
 
 @front.route('/')
 @front.route('/login')
@@ -27,16 +34,7 @@ def home():
 @auth
 def dashboard():
     user = User.find_user_by_id(session['id']).to_dict()
-
-    if user['role'] == 'admin':
-        user['role'] = 'System Manager'
-    elif user['role'] == 'security':
-        user['role'] = 'Security Staff'
-    else:
-        user['role'] = 'System Administrator'
-
-    if user['tag_id'] is None:
-        user['tag_id'] = 'Not assigned'
+    user['role'] = translate(user['role'])
 
     return render_template('dashboard.html', user=user)
 
@@ -55,7 +53,10 @@ def intrusion():
 @front.route('/logs')
 @auth
 def logs():
-    return render_template('logs.html')
+    return render_template(
+        'logs.html',
+        role=code_to_user_role(session['role'])
+    )
 
 @front.route('/users')
 @auth
