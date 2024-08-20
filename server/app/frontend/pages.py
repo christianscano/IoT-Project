@@ -55,10 +55,16 @@ def intrusion():
 @front.route('/logs')
 @auth
 def logs():
-    return render_template('logs.html', data={})
+    return render_template('logs.html')
 
 @front.route('/users')
 @auth
 @admin_only
 def users():
-    return render_template('users.html', data={})
+    return render_template('users.html')
+
+
+@front.route('/change_password')
+@auth
+def change_password():
+    return render_template('change_password.html')

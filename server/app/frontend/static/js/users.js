@@ -29,35 +29,6 @@ function customLoading() {
 }
 
 $(document).ready(function() {
-    function showToast(message, type) {
-        var toastId = 'toast-' + Date.now();
-        var iconHTML = '';
-
-        if (type === 'success') {
-            iconHTML = '<i class="bi bi-check-circle-fill me-2"></i>';
-        } else if (type === 'danger') {
-            iconHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>';
-        }
-
-        var toastHTML = `
-            <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        ${iconHTML}${message}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>`;
-
-        $('#toast-container').append(toastHTML);
-
-        var toastElement = new bootstrap.Toast(document.getElementById(toastId), {
-            delay: 3000
-        });
-        toastElement.show();
-    }
-
-    // Abilita/Disabilita il pulsante di eliminazione in base alla selezione
     $('#users-table').on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function() {
         var selections = $('#users-table').bootstrapTable('getSelections');
         $('#delete-user-btn').prop('disabled', selections.length === 0);
@@ -111,11 +82,11 @@ $(document).ready(function() {
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    name: $('#name').val(),
-                    surname: $('#surname').val(),
+                    name    : $('#name').val(),
+                    surname : $('#surname').val(),
                     username: $('#username').val(),
                     password: $('#password').val(),
-                    role: $('#role').val()
+                    role    : $('#role').val()
                 }),
                 success: function(response) {
                     showToast(response.status, 'success');

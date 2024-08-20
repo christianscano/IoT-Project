@@ -9,32 +9,32 @@ from datetime import datetime
 # ------------------
 class InvalidRoleException(Exception):
     def __init__(self):
-        self.message = 'Invalid role'
+        self.message = 'Invalid role.'
         super().__init__(self.message)
 
 class UserNotExistException(Exception):
     def __init__(self):
-        self.message = 'User does not exist'
+        self.message = 'User does not exist.'
         super().__init__(self.message)
 
 class UserExistException(Exception):
     def __init__(self):
-        self.message = 'User already exists'
+        self.message = 'User already exists.'
         super().__init__(self.message)
 
 class TagExistException(Exception):
     def __init__(self):
-        self.message = 'Tag already assigned'
+        self.message = 'Tag already assigned.'
         super().__init__(self.message)
 
 class UserNotAllowedException(Exception):
     def __init__(self):
-        self.message = 'Operation not allowed for this user'
+        self.message = 'Operation not allowed for this user.'
         super().__init__(self.message)
 
 class InvalidCredentialsException(Exception):
     def __init__(self):
-        self.message = 'The old password is incorrect'
+        self.message = 'The old password is incorrect.'
         super().__init__(self.message)
 
 # ----------------

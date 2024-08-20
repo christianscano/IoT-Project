@@ -28,7 +28,7 @@
                         </li>
                         {% if role == 'admin' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-url="/temperature">
+                            <a class="nav-link" href="#temperature" data-url="/temperature">
                                 <i class="fa fa-temperature-three-quarters"></i> 
                                 <span class="text">Temperature</span>
                             </a>
@@ -36,16 +36,16 @@
                         {% endif %}
                         {% if role == 'security' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-url="/intrusion">
+                            <a class="nav-link" href="#intrusion" data-url="/intrusion">
                                 <i class="fa fa-bell"></i>
                                 <span class="text">Intrusion</span>
                             </a>
                         </li>
                         {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-url="/logs">
+                            <a class="nav-link" href="#logs" data-url="/logs">
                                 <i class="fa bi-person-lines-fill"></i>
-                                <span class="text">Logs</span>
+                                <span class="text">Access Logs</span>
                             </a>
                         </li>
                         {% if role == 'admin' %}
@@ -57,12 +57,12 @@
                             <div class="collapse" id="settingsMenu">
                                 <ul class="nav flex-column ms-3">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#" data-url="/users">
+                                        <a class="nav-link" href="#users" data-url="/users">
                                             Users
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#" data-url="/accesses">
+                                        <a class="nav-link" href="#accesses" data-url="/accesses">
                                             Accesses
                                         </a>
                                     </li>
@@ -81,10 +81,10 @@
                             <div class="collapse" id="usersMenu">
                                 <ul class="nav flex-column ms-3">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#">Change Password</a>
+                                        <a class="nav-link" href="#changePassword" data-url="/change_password">Change Password</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#">Logout</a>
+                                        <a class="nav-link" href="#Logout" data-bs-toggle="modal" data-bs-target="#logoutModal">Log out</a>
                                     </li>
                                 </ul>
                             </div>
@@ -99,5 +99,24 @@
     <main id="main-content" class="bd-main order-1 overflow-y-auto p-4">
         <!-- Content loaded dynamically -->
     </main>
+</div>
+<div>
+    <div class="modal fade" id="logoutModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logougModalLabel">Confirm Log out</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="confirm-logout-btn" type="button" class="btn bd-btn">Log out</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,33 +1,5 @@
 $(document).ready(function() {
     'use strict';
-
-    function showToast(message, type) {
-        var toastId = 'toast-' + Date.now();
-    
-        var iconHTML = '';
-        if (type === 'success') {
-            iconHTML = '<i class="bi bi-check-circle-fill me-2"></i>';
-        } else if (type === 'danger') {
-            iconHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>';
-        }
-    
-        var toastHTML = `
-            <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        ${iconHTML}${message}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>`;
-    
-        $('#toast-container').append(toastHTML);
-    
-        var toastElement = new bootstrap.Toast(document.getElementById(toastId), {
-            delay: 10000 
-        });
-        toastElement.show();
-    }
     
     function updateIntrusionStatus() {
         $.ajax({

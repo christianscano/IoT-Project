@@ -13,13 +13,13 @@ def rfid_auth():
     try:
         user = User.find_by_tagid(request.args.get('uid'))
         if not user:
-            return '', 403
+            return jsonify({'status': 'Forbidden'}), 403
         
         AccessLog.add_log(user.id, user.tag_id)
         
-        return '', 200
+        return jsonify({"status": "Ok"}), 200
     except:
-        return '', 500
+        return jsonify({"status": "Something went wrong"}), 500
     
 @api_user.route('/add_tag', methods=['POST'])
 @auth
@@ -145,25 +145,28 @@ def delete_user(id):
 @auth
 def reset_password():
     try:
-        old_password = request.json['old_password'].strip()
-        new_password = request.json['new_password'].strip()
+        old_password     = request.json['old_password'].strip()
+        new_password     = request.json['new_password'].strip()
+        confirm_password = request.json['confirm_password'].strip()
 
         if not validate_input(new_password):
             return jsonify({"status": "Invalid characters"}), 400
-
-        try:
-            User.reset_password(
-                session['id'], 
-                old_password, 
-                new_password
-            )
-        except InvalidCredentialsException as e:
-            return jsonify({"status": e.message}), 400
-        except UserNotExistException as e:
-            return jsonify({"status": e.message}), 400
         
+        if new_password != confirm_password:
+            return jsonify({"status": "Password mismatch"}), 400
+        
+        User.reset_password(
+            session['id'], 
+            old_password, 
+            new_password
+        )
+    
         return jsonify({'status': 'Password changed successfully'}), 200
     except KeyError:
         return jsonify({"status": "Invalid parameters"}), 400
+    except InvalidCredentialsException as e:
+        return jsonify({"status": e.message}), 400
+    except UserNotExistException as e:
+        return jsonify({"status": e.message}), 400
     except:
         return jsonify({"status": "Something went wrong"}), 500
