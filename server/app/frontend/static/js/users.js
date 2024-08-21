@@ -6,7 +6,7 @@ $(document).ready(function() {
                 params.success(response.data.filter(user => user.username !== 'admin'));
             },
             error: function(response) {
-                showToast(response.status, 'danger');
+                showToast(response.responseJSON.status, 'danger');
                 params.error();
             }
         });
@@ -69,7 +69,7 @@ $(document).ready(function() {
                     handleCompletion(response.status, true);
                 },
                 error: function(response) {
-                    handleCompletion(response.status, false);
+                    handleCompletion(response.responseJSON.status, false);
                 }
             });
         });
@@ -102,7 +102,7 @@ $(document).ready(function() {
                     form.removeClass('was-validated');
                 },
                 error: function(response) {
-                    showToast(response.status, 'danger');
+                    showToast(response.responseJSON.status, 'danger');
                 }
             });
         }

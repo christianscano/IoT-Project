@@ -4,6 +4,7 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from datetime import datetime
 
+
 # ------------------
 # Custom exceptions
 # ------------------
@@ -171,11 +172,14 @@ class AccessLog(db.Model):
     A class to represent a Log in the SQLite database.
     """
     __tablename__ = 'AccessLogs'
-    id        = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
-    tag_id    = db.Column(db.String(10), nullable=False)
+    id        = db.Column(db.Integer, primary_key = True)
+    timestamp = db.Column(
+        db.DateTime, 
+        default = lambda: datetime.now()
+    )
+    tag_id    = db.Column(db.String(10), nullable = False)
     # Foreign key to Users
-    user_id   = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    user_id   = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable = False)
 
     def __init__(self, user_id, tag_id):
         self.user_id = user_id
@@ -223,8 +227,7 @@ class AccessLog(db.Model):
     @staticmethod
     def _to_dict(entry):
         return {
-            'timestamp': entry[0].strftime('%Y-%m-%d %H:%M:%S') \
-                if isinstance(entry[0], datetime) else str(entry[0]),
+            'timestamp': entry[0].strftime('%Y-%m-%d %H:%M:%S'),
             'username' : entry[1],
             'name'     : entry[2],
             'surname'  : entry[3],

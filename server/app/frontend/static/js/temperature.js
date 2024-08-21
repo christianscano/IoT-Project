@@ -11,7 +11,7 @@ $(document).ready(function() {
                 $('#current-temp-time').text(response.data.timestamp);
             },
             error: function(response) {
-                $('#current-temp').text(response.status);
+                $('#current-temp').text(response.responseJSON.status);
             }
         });
     }
@@ -78,14 +78,17 @@ $(document).ready(function() {
                                 },
                                 ticks: {
                                     maxTicksLimit: 15,
-                                }
+                                },
+                                beginAtZero: false,
+                                suggestedMin: Math.min(...trendData) - 2.0,
+                                suggestedMax: Math.max(...trendData) + 2.0
                             },
                         }
                     }
                 });
             },
             error: function(response) {
-                $('#temperature-trend').text(response.status);
+                $('#temperature-trend').text(response.responseJSON.status);
             }
         });
     }

@@ -20,7 +20,7 @@ $(document).ready(function() {
             },
             error: function(response) {
                 $("#alarm-card").addClass('d-none');
-                $('#system-status').text(response.status);
+                $('#system-status').text(response.responseJSON.status);
             }
         });
     }
@@ -40,7 +40,7 @@ $(document).ready(function() {
                 }
             },
             error: function(response) {
-                $('#alarm-status').text(response.status);
+                $('#alarm-status').text(response.responseJSON.status);
             }
         });
     }
@@ -56,7 +56,7 @@ $(document).ready(function() {
                 updateIntrusionStatus(); 
             },
             error: function(response) {
-                showToast(response.status, 'danger');
+                showToast(response.responseJSON.status, 'danger');
             }
         });
     });
@@ -69,7 +69,7 @@ $(document).ready(function() {
                 updateAlarmStatus();
             },
             error: function(response) {
-                showToast(response.status, 'danger');    
+                showToast(response.responseJSON.status, 'danger');    
             }
         });
     });

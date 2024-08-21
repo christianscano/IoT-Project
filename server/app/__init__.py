@@ -25,7 +25,7 @@ if IntrusionSystem.get_intrusion_system() is None:
     IntrusionSystem.create_intrusion_system()
 
 # # Inizialize MQTT
-# mqtt_handler.init_mqtt(app)
+mqtt_handler.init_mqtt(app)
 
 app.register_blueprint(api, url_prefix='/api/v1')
 app.register_blueprint(front, url_prefix='/')

@@ -36,6 +36,9 @@ def dashboard():
     user = User.find_user_by_id(session['id']).to_dict()
     user['role'] = translate(user['role'])
 
+    if user['tag_id'] is None:
+        user['tag_id'] = 'Not assigned'
+
     return render_template('dashboard.html', user=user)
 
 @front.route('/temperature')

@@ -90,7 +90,7 @@ $(document).ready(function() {
                 window.location.href = '/login';
             },
             error: function(response) {
-                showToast(response.message, 'danger');
+                showToast(response.responseJSON.status, 'danger');
             }
         });
     });

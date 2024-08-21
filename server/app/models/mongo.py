@@ -4,6 +4,7 @@ from datetime import datetime
 from bson import json_util
 import json
 
+
 TEMPERATURES_RETENTION = 4000
 ALARM_RETENTION        = 500
 
@@ -12,7 +13,10 @@ class Temperatures(DynamicDocument):
     A class to record temperature measurements of the server room
     in the MongoDB database.
     """
-    timestamp = DateTimeField(required = True, default = datetime.now)
+    timestamp = DateTimeField(
+        required = True,
+        default  = lambda: datetime.now().replace(microsecond=0)
+    )
     value     = FloatField(required = True)
     
     meta = {
@@ -26,8 +30,8 @@ class Temperatures(DynamicDocument):
         data = json.loads(json_util.dumps(data))
         data = {
             'value': data['value'], 
-            'timestamp': datetime.strptime(data['timestamp']['$date'], "%Y-%m-%dT%H:%M:%S.%fZ")\
-                .strftime("%B %d, %Y %H:%M:%S")
+            'timestamp': datetime.strptime(data['timestamp']['$date'], "%Y-%m-%dT%H:%M:%SZ")\
+                .strftime("%Y-%m-%d %H:%M:%S")
         }
         return data
 
@@ -55,7 +59,10 @@ class Temperatures(DynamicDocument):
 
 
 class AlarmStatus(EmbeddedDocument):
-    timestamp  = DateTimeField(required = True, default = datetime.now)
+    timestamp  = DateTimeField(
+        required = True, 
+        default  = lambda: datetime.now().replace(microsecond=0)
+    )
     enabled    = BooleanField(required = True)
 
     meta = {
