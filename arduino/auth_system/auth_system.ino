@@ -99,37 +99,39 @@ void loop()
 {
   check_wifi();
   
-  if (rfid.PICC_IsNewCardPresent()) { 
-    if (rfid.PICC_ReadCardSerial()) {
+  if (rfid.PICC_IsNewCardPresent()) 
+  { 
+    if (rfid.PICC_ReadCardSerial()) 
+    {
       // Check if the card is supported      
-      if (rfid.PICC_GetType(rfid.uid.sak) != MFRC522::PICC_TYPE_MIFARE_1K) {
+      if (rfid.PICC_GetType(rfid.uid.sak) != MFRC522::PICC_TYPE_MIFARE_1K)
         print_on_lcd("Access denied");
-        return;
-      }
+      else 
+      {
+        // Read tag uid
+        card_id = "";
+        for (byte i = 0; i < rfid.uid.size; i++) {;
+          card_id += String(rfid.uid.uidByte[i], HEX);
+        }
 
-      // Read tag uid
-      card_id = "";
-      for (byte i = 0; i < rfid.uid.size; i++) {;
-        card_id += String(rfid.uid.uidByte[i], HEX);
-      }
+        card_id.toUpperCase();
 
-      card_id.toUpperCase();
+        if (card_id == MASTER_KEY) {
+          print_on_lcd("Access granted");
+          servo.write(130);
+        } else if (send_auth_request(card_id)) {
+          print_on_lcd("Access granted");
+          servo.write(130);
+        } else {
+          print_on_lcd("Access denied");
+        }
+      }
 
       // Break communication
       rfid.PICC_HaltA();
       rfid.PCD_StopCrypto1();
 
-      if (card_id == MASTER_KEY) {
-        print_on_lcd("Access granted");
-        servo.write(130);
-      } else if (send_auth_request(card_id)) {
-        print_on_lcd("Access granted");
-        servo.write(130);
-      } else {
-        print_on_lcd("Access denied");
-      }
-
-      delay(5000);
+      delay(10000);
       
       servo.write(0);
       print_on_lcd("Place key");
