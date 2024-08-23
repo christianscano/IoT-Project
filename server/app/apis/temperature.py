@@ -22,11 +22,11 @@ def retrieve_last_temperature():
 @auth
 @admin_only
 def retrieve_last_hour():
-    # try:
+    try:
         temps = Temperature.get_time_range(timedelta(minutes=10))
         return jsonify({
             'status': 'Data retrived',
             'data': [temp.to_dict() for temp in temps]
         }), 200
-    # except:
-    #     return jsonify({'status': 'No data available'}), 500
+    except:
+        return jsonify({'status': 'No data available'}), 500
