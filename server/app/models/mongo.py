@@ -8,7 +8,7 @@ import json
 TEMPERATURES_RETENTION = 4000
 ALARM_RETENTION        = 500
 
-class Temperatures(DynamicDocument):
+class Temperature(DynamicDocument):
     """
     A class to record temperature measurements of the server room
     in the MongoDB database.

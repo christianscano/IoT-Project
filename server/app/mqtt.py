@@ -1,12 +1,12 @@
 from flask import Flask
-from app.models.mongo import Temperatures, IntrusionSystem
+from app.models.mongo import Temperature, IntrusionSystem
 import string
 import random
 import paho.mqtt.client as mqtt
 
 
 def record_temp(message):
-    Temperatures.add_measure(
+    Temperature.add_measure(
         float(message.payload.decode('utf-8'))
     )
 
