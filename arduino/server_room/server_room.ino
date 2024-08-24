@@ -118,15 +118,19 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   for (int i = 0; i < length; i++)
     message += (char)payload[i];
 
-  if (String(topic) == TOPIC_ALARM && message == "0")
+  if (String(topic) == TOPIC_ALARM && message == "0") {
     alarm_state = false;
+    digitalWrite(ALARM_PIN, LOW);
+  }
 
   if (String(topic) == TOPIC_INTR)
-    if (message == "1")
+    if (message == "1") {
       intrusion_system_state = true;
-    else {
+      digitalWrite(LED_PIN, HIGH);
+    } else {
       intrusion_system_state = false;
       alarm_state  = false;
+      digitalWrite(LED_PIN, LOW);
     }
 }
 
@@ -151,8 +155,7 @@ void check_intrusion()
       alarm_state = true;
       mqtt_client->publish(TOPIC_DET, String("1").c_str());      
       tone(ALARM_PIN, 440);
-    } else
-      digitalWrite(ALARM_PIN, LOW);
+    }
   }
 
   // Disable the alarm if the system is disabled
@@ -195,14 +198,8 @@ void loop()
 
   mqtt_client->loop();
 
-  if (intrusion_system_state) {
-    digitalWrite(LED_PIN, HIGH);
-  } else {
-    digitalWrite(LED_PIN, LOW);
-  }
-
   get_temperature();
   check_intrusion();
 
-  delay(1000);
+  delay(2000);
 }
