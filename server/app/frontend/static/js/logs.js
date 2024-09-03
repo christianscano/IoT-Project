@@ -43,6 +43,7 @@ $(document).ready(function () {
         format        : 'yyyy-mm-dd',
         autoclose     : true,
         todayHighlight: true,
+	orientation   : 'auto bottom',
         templates: {
             leftArrow : '<i class="fa fa-chevron-left"></i>',
             rightArrow: '<i class="fa fa-chevron-right"></i>'
@@ -53,6 +54,7 @@ $(document).ready(function () {
         format        : 'yyyy-mm-dd',
         autoclose     : true,
         todayHighlight: true,
+	orientation   : 'auto bottom',
         templates: {
             leftArrow : '<i class="fa fa-chevron-left"></i>',
             rightArrow: '<i class="fa fa-chevron-right"></i>'
