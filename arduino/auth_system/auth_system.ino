@@ -24,7 +24,7 @@ String card_id;
 
 // Constants
 const char* SSID         = "iliadbox-615C99";
-const char* PASSWORD     = "%4zvHyNY2H4E";
+const char* PASSWORD     = "";
 const String SERVER_ADDR = "192.168.1.31:5000";
 const String MASTER_KEY  = "CB4B8922";
 
