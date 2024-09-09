@@ -21,7 +21,7 @@ CertStore certStore;
 
 // Constants
 const char* SSID      = "iliadbox-615C99";
-const char* PASSWORD  = "%4zvHyNY2H4E";
+const char* PASSWORD  = "";
 
 const char* MQTT_ADDR = "49ded85c25e645a7ba547aee781d2231.s1.eu.hivemq.cloud";
 const int   MQTT_PORT = 8883;
